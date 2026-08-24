@@ -10,14 +10,13 @@ class Program
     [DllImport("user32.dll", CharSet = CharSet.Auto)]
     private static extern int SystemParametersInfo(int uAction, int uParam, string lpvParam, int fuWinIni);
 
-
     static void Main()
     {
         // Dynamically gets C:\Users\<Username>\Pictures\wallpapers
         string baseFolder = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.MyPictures),
-            @"wallpapers",
-            @"gta6"
+            "wallpapers",
+            "gta6"
         );
 
         // Get all images for category
@@ -40,6 +39,7 @@ class Program
         canvasGraphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
         canvasGraphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
         canvasGraphics.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
+        canvasGraphics.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
 
         // Sort monitors left-to-right by physical X position
         var screens = Screen.AllScreens.OrderBy(s => s.Bounds.X).ToArray();
@@ -63,8 +63,9 @@ class Program
             canvasGraphics.DrawImage(img, drawX, drawY, width, height);
         }
 
-        // Save canvas to temp folder as PNG to prevent lossy re-compression
+        // User Temp folder 
         string tempPath = Path.Combine(Path.GetTempPath(), "spanned_wallpaper.png");
+        // Save as PNG to prevent lossy re-compression
         canvas.Save(tempPath, System.Drawing.Imaging.ImageFormat.Png);
 
         // Configure Registry for "Span" mode (Style 22)
