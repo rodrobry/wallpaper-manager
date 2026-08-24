@@ -15,13 +15,74 @@ class Program
         // Dynamically gets C:\Users\<Username>\Pictures\wallpapers
         string baseFolder = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.MyPictures),
-            "wallpapers",
-            "gta6"
+            "wallpapers"
         );
+        if (!Directory.Exists(baseFolder))
+        {
+            Console.WriteLine($"Wallpapers folder does not exist: {baseFolder}");
+            return;
+        }
 
-        // Get all images for category
-        List<string> horizontalImages = GetImages(Path.Combine(baseFolder, "Horizontal"));
-        List<string> verticalImages = GetImages(Path.Combine(baseFolder, "Vertical"));
+        // Get all subfolders in Pictures\wallpapers
+        string[] categoryFolders = Directory.GetDirectories(baseFolder);
+        if (categoryFolders.Length == 0)
+        {
+            Console.WriteLine("No subfolders found inside your 'wallpapers' directory!");
+            return;
+        }
+
+        // Display available categories
+        Console.WriteLine("Select a wallpaper category:");
+        for (int i = 0; i < categoryFolders.Length; i++)
+        {
+            Console.WriteLine($"  [{i + 1}] {Path.GetFileName(categoryFolders[i])}");
+        }
+
+        // Prompt for input (defaults to random if left blank or invalid)
+        Console.Write("\nEnter name or number (or press Enter for random): ");
+        string? input = Console.ReadLine();
+
+        string categoryFolder;
+        // Valid number
+        if (int.TryParse(input, out int choice) &&
+            choice >= 1 && choice <= categoryFolders.Length)
+        {
+            categoryFolder = categoryFolders[choice - 1];
+        }
+        // Valid name - assign to "matchedFolder" if LINQ doesn't return null (the default)
+        else if (categoryFolders
+            .FirstOrDefault(f => Path.GetFileName(f)
+                .Equals(input, StringComparison.OrdinalIgnoreCase)) is string matchedFolder)
+        {
+            categoryFolder = matchedFolder;
+        }
+        // Invalid or blank input
+        else
+        {
+            categoryFolder = categoryFolders[Random.Shared.Next(categoryFolders.Length)];
+            Console.WriteLine($"Selecting random category: {Path.GetFileName(categoryFolder)}");
+        }
+
+        Console.WriteLine($"Loaded: {Path.GetFileName(categoryFolder)}");
+
+        // Define subpaths
+        string horizontalPath = Path.Combine(categoryFolder, "horizontal");
+        string verticalPath = Path.Combine(categoryFolder, "vertical");
+        if (!Directory.Exists(horizontalPath) || !Directory.Exists(verticalPath))
+        {
+            Console.WriteLine($"\nERROR: Category '{Path.GetFileName(categoryFolder)}' is invalid!");
+            Console.WriteLine("Make sure both 'Horizontal' and 'Vertical' subfolders exist.");
+            return;
+        }
+
+        // Fetch all category images
+        List<string> horizontalImages = GetImages(horizontalPath);
+        List<string> verticalImages = GetImages(verticalPath);
+        if (horizontalImages.Count == 0 || verticalImages.Count == 0)
+        {
+            Console.WriteLine("\nERROR: One or both layout folders are empty!");
+            return;
+        }
 
         // Set paths to  3  random images (Horizontal, Horizontal, Vertical)
         string[] imagePaths = {
