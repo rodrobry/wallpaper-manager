@@ -16,14 +16,19 @@ class Program
         // Dynamically gets C:\Users\<Username>\Pictures\wallpapers
         string baseFolder = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.MyPictures),
-            @"wallpapers"
+            @"wallpapers",
+            @"gta6"
         );
 
-        // Set paths to  3 images (Horizontal, Horizontal, Vertical)
+        // Get all images for category
+        List<string> horizontalImages = GetImages(Path.Combine(baseFolder, "Horizontal"));
+        List<string> verticalImages = GetImages(Path.Combine(baseFolder, "Vertical"));
+
+        // Set paths to  3  random images (Horizontal, Horizontal, Vertical)
         string[] imagePaths = {
-            Path.Combine(baseFolder, @"gta6\Horizontal\Vice_City_Postcard_landscape.jpg"),
-            Path.Combine(baseFolder, @"gta6\Horizontal\Official_Cover_Art_landscape.jpg"),
-            Path.Combine(baseFolder, @"gta6\Vertical\Jason_and_Lucia_Robbery_With_Logo_portrait.jpg")
+            PickAndRemoveRandom(horizontalImages),
+            PickAndRemoveRandom(horizontalImages),
+            PickAndRemoveRandom(verticalImages)
         };
 
         // Get exact total desktop bounds from Windows
@@ -70,5 +75,22 @@ class Program
         // Refresh desktop wallpaper (SPI_SETDESKWALLPAPER = 0x0014)
         SystemParametersInfo(0x0014, 0, tempPath, 0x01 | 0x02);
         Console.WriteLine("Wallpaper updated successfully!");
+    }
+
+    // Helper to grab all images from a directory
+    static List<string> GetImages(string path) =>
+        Directory.GetFiles(path, "*.*")
+            .Where(f => f.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) ||
+                        f.EndsWith(".png", StringComparison.OrdinalIgnoreCase))
+            .ToList();
+
+    // Helper to pick a random image and remove it from the pool to avoid duplicates
+    static string PickAndRemoveRandom(List<string> list)
+    {
+        if (list.Count == 0) return string.Empty;
+        int index = Random.Shared.Next(list.Count);
+        string chosen = list[index];
+        if (list.Count > 1) list.RemoveAt(index);
+        return chosen;
     }
 }
