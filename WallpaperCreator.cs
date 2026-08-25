@@ -1,11 +1,9 @@
-using System.Drawing;
+using System.Drawing.Imaging;
 using System.Drawing.Drawing2D;
-using System.IO;
-using System.Windows.Forms;
 
 public static class WallpaperCreator
 {
-    public static string CreateSpannedImage(string[] imagePaths)
+    public static string MergeImages(string[] imagePaths)
     {
         // Get exact total desktop bounds from Windows
         Rectangle virtualScreen = SystemInformation.VirtualScreen;
@@ -13,10 +11,10 @@ public static class WallpaperCreator
         using var canvasGraphics = Graphics.FromImage(canvas);
 
         // Enable high-quality rendering modes
-        canvasGraphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-        canvasGraphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-        canvasGraphics.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
-        canvasGraphics.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
+        canvasGraphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+        canvasGraphics.SmoothingMode = SmoothingMode.HighQuality;
+        canvasGraphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+        canvasGraphics.CompositingQuality = CompositingQuality.HighQuality;
 
         // Sort monitors left-to-right by physical X position
         var screens = Screen.AllScreens.OrderBy(s => s.Bounds.X).ToArray();
@@ -40,10 +38,10 @@ public static class WallpaperCreator
             canvasGraphics.DrawImage(img, drawX, drawY, width, height);
         }
 
-        // User Temp folder 
+        // User Temp folder -> C:\Users\<user>\AppData\Local\Temp
         string tempPath = Path.Combine(Path.GetTempPath(), "spanned_wallpaper.png");
         // Save as PNG to prevent lossy re-compression
-        canvas.Save(tempPath, System.Drawing.Imaging.ImageFormat.Png);
+        canvas.Save(tempPath, ImageFormat.Png);
 
         return tempPath;
     }

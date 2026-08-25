@@ -1,10 +1,4 @@
-﻿using System;
-using System.Drawing;
-using System.IO;
-using System.Runtime.InteropServices;
-using Microsoft.Win32;
-
-class Program
+﻿class Program
 {
     static void Main()
     {
@@ -86,10 +80,8 @@ class Program
             PickAndRemoveRandom(verticalImages)
         };
 
-        string newWallpaperPath = WallpaperCreator.CreateSpannedImage(imagePaths);
-
+        string newWallpaperPath = WallpaperCreator.MergeImages(imagePaths);
         WallpaperSwapper.ApplyNewWallpaper(newWallpaperPath);
-
     }
 
     // Helper to grab all images from a directory
