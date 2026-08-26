@@ -21,39 +21,7 @@
             return;
         }
 
-        // Display available categories
-        Console.WriteLine("Select a wallpaper category:");
-        for (int i = 0; i < categoryFolders.Length; i++)
-        {
-            Console.WriteLine($"  [{i + 1}] {Path.GetFileName(categoryFolders[i])}");
-        }
-
-        // Prompt for input (defaults to random if left blank or invalid)
-        Console.Write("\nEnter name or number (or press Enter for random): ");
-        string? input = Console.ReadLine();
-
-        string categoryFolder;
-        // Valid number
-        if (int.TryParse(input, out int choice) &&
-            choice >= 1 && choice <= categoryFolders.Length)
-        {
-            categoryFolder = categoryFolders[choice - 1];
-        }
-        // Valid name - assign to "matchedFolder" if LINQ doesn't return null (the default)
-        else if (categoryFolders
-            .FirstOrDefault(f => Path.GetFileName(f)
-                .Equals(input, StringComparison.OrdinalIgnoreCase)) is string matchedFolder)
-        {
-            categoryFolder = matchedFolder;
-        }
-        // Invalid or blank input
-        else
-        {
-            categoryFolder = categoryFolders[Random.Shared.Next(categoryFolders.Length)];
-            Console.WriteLine($"Selecting random category: {Path.GetFileName(categoryFolder)}");
-        }
-
-        Console.WriteLine($"Loaded: {Path.GetFileName(categoryFolder)}");
+        string categoryFolder = FolderSelector.SelectFolder(categoryFolders);
 
         // Define image orientation subpaths
         string horizontalPath = Path.Combine(categoryFolder, "horizontal");
