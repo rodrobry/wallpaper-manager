@@ -1,4 +1,5 @@
 ﻿using WallpaperManager.Services;
+using WallpaperManager.Utils;
 
 namespace WallpaperManager;
 
@@ -48,7 +49,7 @@ class Program
 
     // Helper to grab all images from a directory
     private static List<string> GetImages(string path) =>
-        Directory.GetFiles(path, "*.*")
+        Directory.EnumerateFiles(path, "*.*")
             .Where(f => f.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) ||
                         f.EndsWith(".png", StringComparison.OrdinalIgnoreCase))
             .ToList();
@@ -65,11 +66,8 @@ class Program
 
     private static int ExitWithError(string message)
     {
-        Console.ForegroundColor = ConsoleColor.Red;
-        Console.WriteLine($"ERROR: {message}");
-        Console.ResetColor();
-
-        Console.WriteLine("\nPress any key to exit...");
+        CliUtils.ShowError(message);
+        Console.WriteLine("Press any key to exit...");
         Console.ReadKey(intercept: true); // Wait for input without printing the key to the screen
         return 1;
     }

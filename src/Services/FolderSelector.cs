@@ -1,3 +1,5 @@
+using WallpaperManager.Utils;
+
 namespace WallpaperManager.Services;
 
 public static class FolderSelector
@@ -46,10 +48,7 @@ public static class FolderSelector
             return matchedFolder;
         }
 
-        Console.ForegroundColor = ConsoleColor.Yellow;
-        Console.WriteLine($"'{input}' is not a valid option.");
-        Console.ResetColor();
-
+        CliUtils.ShowWarning($"'{input}' is not a valid option.");
         return null;
     }
 }
