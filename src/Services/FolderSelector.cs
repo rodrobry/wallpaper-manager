@@ -1,3 +1,5 @@
+namespace WallpaperManager.Services;
+
 public static class FolderSelector
 {
     public static string SelectFolder(string[] folderPaths)

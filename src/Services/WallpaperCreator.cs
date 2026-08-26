@@ -1,6 +1,8 @@
 using System.Drawing.Imaging;
 using System.Drawing.Drawing2D;
 
+namespace WallpaperManager.Services;
+
 public static class WallpaperCreator
 {
     public static string MergeImages(string[] imagePaths)

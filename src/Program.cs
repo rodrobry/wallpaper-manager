@@ -1,4 +1,8 @@
-﻿class Program
+﻿using WallpaperManager.Services;
+
+namespace WallpaperManager;
+
+class Program
 {
     static int Main()
     {

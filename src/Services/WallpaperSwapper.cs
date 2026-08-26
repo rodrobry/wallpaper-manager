@@ -1,6 +1,8 @@
 using Microsoft.Win32;
 using System.Runtime.InteropServices;
 
+namespace WallpaperManager.Services;
+
 public static class WallpaperSwapper
 {
     // Win32 API Params
