@@ -10,15 +10,14 @@ class Program
         // C:\Users\<Username>\Pictures\wallpapers
         string baseFolder = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.MyPictures),
-            "wallpapers"
-        );
+            "wallpapers");
         if (!Directory.Exists(baseFolder))
-           return ExitWithError($"'wallpapers' folder does not exist: {baseFolder}");
+            return ExitWithError($"'wallpapers' folder does not exist: {baseFolder}");
 
         // Get all category subfolders -> wallpapers\<category>
         string[] categoryFolders = Directory.GetDirectories(baseFolder);
         if (categoryFolders.Length == 0)
-           return ExitWithError("No subfolders inside the 'wallpapers' directory!");
+            return ExitWithError("No subfolders inside the 'wallpapers' directory!");
 
         string categoryFolder = FolderSelector.SelectFolder(categoryFolders);
 
@@ -26,14 +25,14 @@ class Program
         string horizontalPath = Path.Combine(categoryFolder, "horizontal");
         string verticalPath = Path.Combine(categoryFolder, "vertical");
         if (!Directory.Exists(horizontalPath) || !Directory.Exists(verticalPath))
-           return ExitWithError(
-                $"No 'horizontal' and/or 'vertical' subfolders in category '{Path.GetFileName(categoryFolder)}'.");
+            return ExitWithError(
+                 $"No 'horizontal' and/or 'vertical' subfolders in category '{Path.GetFileName(categoryFolder)}'.");
 
         // Fetch all category images
         List<string> horizontalImages = GetImages(horizontalPath);
         List<string> verticalImages = GetImages(verticalPath);
         if (horizontalImages.Count == 0 || verticalImages.Count == 0)
-           return ExitWithError("One or both layout folders are empty!");
+            return ExitWithError("One or both layout folders are empty!");
 
         // Select  3  random images (Horizontal, Horizontal, Vertical)
         string[] imagePaths = {
