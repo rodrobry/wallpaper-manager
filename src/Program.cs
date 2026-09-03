@@ -49,9 +49,7 @@ class Program
     // Helper to grab all images from a directory
     private static List<string> GetImages(string path) =>
         Directory.EnumerateFiles(path, "*.*")
-            .Where(f => f.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) ||
-                        f.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase) ||
-                        f.EndsWith(".png", StringComparison.OrdinalIgnoreCase))
+            .Where(FileUtils.IsSupportedImageFormat)
             .ToList();
 
     // Helper to pick a random image and remove it from the pool to avoid duplicates
