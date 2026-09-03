@@ -50,6 +50,7 @@ class Program
     private static List<string> GetImages(string path) =>
         Directory.EnumerateFiles(path, "*.*")
             .Where(f => f.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) ||
+                        f.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase) ||
                         f.EndsWith(".png", StringComparison.OrdinalIgnoreCase))
             .ToList();
 

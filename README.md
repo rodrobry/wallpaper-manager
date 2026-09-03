@@ -23,3 +23,8 @@ Example:
 └── categoryN/
     ├── horizontal/
     └── vertical/
+```
+
+### Supported Image Formats
+- `.jpg` / `.jpeg`
+- `.png`
