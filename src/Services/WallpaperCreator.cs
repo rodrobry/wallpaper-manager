@@ -1,5 +1,6 @@
 using System.Drawing.Imaging;
 using System.Drawing.Drawing2D;
+using WallpaperManager.Utils;
 
 namespace WallpaperManager.Services;
 
@@ -26,7 +27,7 @@ public static class WallpaperCreator
         {
             if (!File.Exists(imagePaths[i]))
             {
-                Console.WriteLine($"WARNING: File not found -> {imagePaths[i]}");
+                CliUtils.ShowWarning($"File not found -> {imagePaths[i]}");
                 continue;
             }
 

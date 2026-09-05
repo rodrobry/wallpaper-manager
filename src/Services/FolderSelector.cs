@@ -4,7 +4,33 @@ namespace WallpaperManager.Services;
 
 public static class FolderSelector
 {
-    public static string SelectFolder(string[] folderPaths)
+    public static void PromptForBaseFolder(AppConfig config)
+    {
+        while (!Directory.Exists(config.BaseFolder))
+        {
+            Console.Write("Please provide a valid base folder path: ");
+            string? input = Console.ReadLine()?.Trim(' ', '"');
+            if (input is null)
+            {
+                Console.WriteLine("\nOperation canceled.");
+                Environment.Exit(0);
+            }
+            if (string.IsNullOrWhiteSpace(input))
+            {
+                CliUtils.ShowWarning("Path cannot be empty.");
+                continue;
+            }
+            if (!Directory.Exists(input))
+            {
+                CliUtils.ShowWarning($"Directory '{input}' does not exist.");
+                continue;
+            }
+            config.BaseFolder = input;
+        }
+        config.Save();
+    }
+
+    public static string PromptForCategoryFolder(string[] folderPaths)
     {
         // Display available categories
         Console.WriteLine("Available folders:");
@@ -16,18 +42,17 @@ public static class FolderSelector
         string? selectedFolder = null;
         while (selectedFolder == null)
         {
-            selectedFolder = PromptUser(folderPaths);
+            Console.Write("Enter a name or number (leave blank for random): ");
+            string? input = Console.ReadLine()?.Trim();
+            selectedFolder = ParseCategoryInput(input, folderPaths);
         }
 
         Console.WriteLine($"Selected: {Path.GetFileName(selectedFolder)}");
         return selectedFolder;
     }
 
-    private static string? PromptUser(string[] folderPaths)
+    private static string? ParseCategoryInput(string? input, string[] folderPaths)
     {
-        Console.Write("Enter a name or number (leave blank for random): ");
-        string? input = Console.ReadLine()?.Trim();
-
         // Stream closed or aborted (like Ctrl+Z or Ctrl+C)
         if (input is null)
         {
@@ -35,7 +60,7 @@ public static class FolderSelector
             Environment.Exit(0);
         }
         // Blank input -> Random selection
-        if (input.Length == 0)
+        if (string.IsNullOrWhiteSpace(input))
         {
             Console.WriteLine($"Selecting random folder");
             return folderPaths[Random.Shared.Next(folderPaths.Length)];

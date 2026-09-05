@@ -8,16 +8,17 @@ class Program
     static int Main()
     {
         AppConfig config = AppConfig.LoadOrCreate();
-        string baseFolder = config.BaseFolder;
-        if (!Directory.Exists(baseFolder))
-            return ExitWithError($"'wallpapers' folder does not exist: {baseFolder}");
+        if (!Directory.Exists(config.BaseFolder))
+        {
+            CliUtils.ShowWarning($"Base wallpapers folder does not exist: {config.BaseFolder}");
+            FolderSelector.PromptForBaseFolder(config);
+        }
 
-        // Get all category subfolders -> wallpapers\<category>
-        string[] categoryFolders = Directory.GetDirectories(baseFolder);
+        string[] categoryFolders = Directory.GetDirectories(config.BaseFolder);
         if (categoryFolders.Length == 0)
-            return ExitWithError("No subfolders inside the 'wallpapers' directory!");
+            return ExitWithError("No category/topic subfolders inside the directory!");
 
-        string categoryFolder = FolderSelector.SelectFolder(categoryFolders);
+        string categoryFolder = FolderSelector.PromptForCategoryFolder(categoryFolders);
 
         // Define image orientation subpaths
         string horizontalPath = Path.Combine(categoryFolder, "horizontal");
