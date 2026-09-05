@@ -7,10 +7,8 @@ class Program
 {
     static int Main()
     {
-        // C:\Users\<Username>\Pictures\wallpapers
-        string baseFolder = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.MyPictures),
-            "wallpapers");
+        AppConfig config = AppConfig.LoadOrCreate();
+        string baseFolder = config.BaseFolder;
         if (!Directory.Exists(baseFolder))
             return ExitWithError($"'wallpapers' folder does not exist: {baseFolder}");
 
