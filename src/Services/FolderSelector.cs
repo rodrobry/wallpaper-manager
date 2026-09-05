@@ -28,8 +28,14 @@ public static class FolderSelector
         Console.Write("Enter a name or number (leave blank for random): ");
         string? input = Console.ReadLine()?.Trim();
 
+        // Stream closed or aborted (like Ctrl+Z or Ctrl+C)
+        if (input is null)
+        {
+            Console.WriteLine("\nOperation canceled.");
+            Environment.Exit(0);
+        }
         // Blank input -> Random selection
-        if (string.IsNullOrEmpty(input))
+        if (input.Length == 0)
         {
             Console.WriteLine($"Selecting random folder");
             return folderPaths[Random.Shared.Next(folderPaths.Length)];
